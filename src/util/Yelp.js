@@ -1,43 +1,19 @@
-const clientId = 'HNZAnfFY1laDq3JQpeo1_A';
-const secret = 'LZ1rTYp8OVpQL4entGBagEa3rpAr0t63SUfEgLfpUiDalZ29jIUbbXKIsdsIDjOC';
-let accessToken;
+const apiKey = 'gFL4ct4Iiqn8ktK2mesHDt0OWXzzyWwk_5n_zJvrvkr3_xQgSLGudNAGNNwAablEnX8jvsuXucs5jkX6-sLNKMAfU2U7bn3zOmoBai1jo4Z1eQwywSrDEjAENUrpWXYx';
 
 export const Yelp = {
-  // Method to retrieve an access token required to access the api
-  getAccessToken: () => {
-    if (accessToken) {
-      return new Promise(
-        resolve =>
-        resolve(accessToken)
-      );
-    }
-    return fetch(
-      'https://cors-anywhere.herokuapp.com/https://api.yelp.com/oauth2/token?grant_type=client_credentials&client_id=' +
-      clientId + '&client_secret=' + secret, {
-        method: 'POST'
-      }
-    ).then(response => {
-      return response.json();
-    }).then(jsonResponse => {
-      accessToken = jsonResponse.access_token;
-    });
-  },
 
-  // Method to retrieve search results from the Yelp API
   search: (term, location, sortBy) => {
+
     return (
-      Yelp.getAccessToken().then(() => {
-        return (
           fetch('https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=' +
             term + '&location=' + location + '&sort_by=' + sortBy, {
               headers: {
-                Authorization: `Bearer ${accessToken}`
+                Authorization: `Bearer ${apiKey}`
               }
             }
           )
-        ).then(response => {
-          return response.json();
-        }).then(jsonResponse => {
+        .then(response => response.json())
+        .then(jsonResponse => {
           if (jsonResponse.businesses) {
             console.log(jsonResponse.businesses);
             return jsonResponse.businesses.map(business => {
@@ -55,7 +31,6 @@ export const Yelp = {
             });
           }
         })
-      })
-    );
+      )
   }
 };
